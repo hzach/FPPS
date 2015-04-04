@@ -1,0 +1,22 @@
+*.class
+*.log
+
+recitations/
+submission/
+.settings
+.idea
+.project
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+recitations/
+submission/
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
