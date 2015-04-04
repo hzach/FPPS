@@ -1,6 +1,4 @@
 
 import forcomp.Anagrams._
-
-val sen = List("yes", "man")
-
-sentenceAnagrams(sen)
+val sentence = List("yes", "man")
+sentenceAnagrams(sentence) foreach println
