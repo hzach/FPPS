@@ -90,14 +90,14 @@ object Anagrams {
   def combinations(occurrences: Occurrences): List[Occurrences] = {
 
     /*Pre-process the occurrences into a list containing the chars with respective multiplicity */
-    val occ = (for { i <-occurrences } yield (List.fill(i._2)(i._1))).flatMap(x => x)
+    val occ = (for { i <-occurrences } yield List.fill(i._2)(i._1)).flatMap(x => x)
 
     def loop(list: List[Char], acc: List[List[Char]]): List[List[Char]] = list match {
       case Nil => acc++Nil
-      case x :: xs => loop(xs, (for {e <- acc} yield (x :: e)) ++ acc)
+      case x :: xs => loop(xs, (for {e <- acc} yield x :: e) ++ acc)
     }
 
-    loop(occ, List(List())).map(x => wordOccurrences(x.mkString("")))
+    loop(occ, List(Nil)).map(x => wordOccurrences(x.mkString("")))
   }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
@@ -118,7 +118,7 @@ object Anagrams {
       if ( h <= 0) x - c else x.updated(c, h)
     }
 
-    (yMap.foldLeft(xMap)(rmFreq(_,_))).toList
+    yMap.foldLeft(xMap)(rmFreq).toList
 
   }
 
@@ -162,16 +162,20 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[List[Sentence]] = {
-    if (sentence.isEmpty) List(Nil)
-    else {
-      val occ = sentenceOccurrences(sentence)
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+
+    def loop(acc:List[Word], occ: Occurrences): List[Sentence] = occ match {
+      case Nil => List(acc)
+      case x::xs => {
         for {
-          combo:List[Occurrences] <- combinations(occ)
-          word:List[Word] <- dictionaryByOccurrences(combo)
-          rest:Occurrences <- subtract(occ, wordOccurrences(word))
-          if word!=List()
-        } yield word::sentenceAnagrams(dictionaryByOccurrences(rest))
+          combos <- combinations(occ)
+          words <- dictionaryByOccurrences(combos)
+          remaining = subtract(occ, combos)
+        } yield loop(words::acc, remaining)
+      }.flatten
     }
+
+    val senOcc = sentenceOccurrences(sentence)
+    loop(List(), senOcc)
   }
 }
