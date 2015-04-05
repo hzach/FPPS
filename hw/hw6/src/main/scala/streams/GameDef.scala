@@ -5,7 +5,7 @@ import common._
 /**
  * This trait represents the layout and building blocks of the game
  *
- * @TODO: SHOULD RENAME `x` and `y` in class Pos to `row` and `col`. It's
+ * TODO: SHOULD RENAME `x` and `y` in class Pos to `row` and `col`. It's
  * confusing to have `x` being the vertical axis.
  */
 trait GameDef {
@@ -26,7 +26,7 @@ trait GameDef {
    *   2 o # o o    # is at position Pos(2, 1)
    *   3 o o o o
    *  
-   *   ^
+   *
    *   |
    *  
    *   x axis

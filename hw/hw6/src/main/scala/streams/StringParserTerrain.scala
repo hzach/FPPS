@@ -52,7 +52,13 @@ trait StringParserTerrain extends GameDef {
    * a valid position (not a '-' character) inside the terrain described
    * by `levelVector`.
    */
-  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = ???
+  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = {
+    (p:Pos) =>
+      if (outOfBounds(p)) false
+      else levelVector(p.x)(p.y) != '-'
+
+      def outOfBounds(p:Pos): Boolean = p.x < 0 || p.y < 0 || p.x >= levelVector.length || p.y >= levelVector.head.length
+  }
 
   /**
    * This function should return the position of character `c` in the
@@ -62,7 +68,23 @@ trait StringParserTerrain extends GameDef {
    * Hint: you can use the functions `indexWhere` and / or `indexOf` of the
    * `Vector` class
    */
-  def findChar(c: Char, levelVector: Vector[Vector[Char]]): Pos = ???
+  def findChar(c: Char, levelVector: Vector[Vector[Char]]): Pos = {
+
+    val result =
+      for {
+        (col, i) <- levelVector.view.zipWithIndex
+        (elem, j) <- col.view.zipWithIndex
+        if elem == c
+      } yield (i, j)
+
+    /* Because the pre-conditions for levelVector is that 'c' appears exactly once in it,
+     * we can be sure that its index is equal to the head of the result collection.
+     * views insure that we do not traverse the matrix deeper than necessary. If this
+     * precondition were taken away, we could use headOption to handle the case where 'c'
+     * is not present */
+    new Pos(result.head._1, result.head._2)
+
+  }
 
   private lazy val vector: Vector[Vector[Char]] =
     Vector(level.split("\n").map(str => Vector(str: _*)): _*)
