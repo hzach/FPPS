@@ -53,6 +53,61 @@ class BloxorzSuite extends FunSuite {
     }
   }
 
+  test("isStanding test") {
+    new Level1 {
+      assert(startBlock.isStanding)
+      assert(!startBlock.down.isStanding)
+    }
+  }
+
+  test("Neighbors test") {
+    new Level1 {
+      startBlock.neighbors foreach println
+
+      val lglNeighbors = List( (Block(Pos(1,2), Pos(1,3)), Right), (Block(Pos(2, 1), Pos(3, 1)), Down))
+      assert(startBlock.legalNeighbors === lglNeighbors)
+
+      startBlock.right.neighbors foreach println
+      println("\n")
+      startBlock.right.legalNeighbors foreach println
+    }
+  }
+
+  test("Neighbors with history test") {
+    new Level1 {
+      //println(neighborsWithHistory(startBlock, List()).take(3).toList)
+      val next = startBlock.down
+      val his = List(Down)
+      neighborsWithHistory(next, his) foreach println
+//      println("\n")
+//      newNeighborsOnly( neighborsWithHistory(next, his), Set(startBlock, Block(Pos(1,2), Pos(1,3)) ) ) foreach println
+    }
+  }
+
+  test("Unique neighbors") {
+    new Level1 {
+
+      assert(
+        newNeighborsOnly(
+          Set(
+            (Block(Pos(1,2),Pos(1,3)), List(Right,Left,Up)),
+            (Block(Pos(2,1),Pos(3,1)), List(Down,Left,Up))
+          ).toStream,
+          Set(Block(Pos(1,2),Pos(1,3)), Block(Pos(1,1),Pos(1,1)))
+        ) === Set(Block(Pos(2,1),Pos(3,1)), List(Down,Left,Up)).toStream )
+
+    }
+  }
+
+  test("from initial test") {
+
+    new Level1 {
+
+      pathsFromStart.take(10).toList foreach println
+
+    }
+  }
+
   test("optimal solution for level 1") {
     new Level1 {
       assert(solve(solution) == Block(goal, goal))
