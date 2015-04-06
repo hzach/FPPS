@@ -108,6 +108,13 @@ class BloxorzSuite extends FunSuite {
     }
   }
 
+  test("paths to goal") {
+
+    new Level1 {
+      pathsToGoal foreach println
+    }
+  }
+
   test("optimal solution for level 1") {
     new Level1 {
       assert(solve(solution) == Block(goal, goal))
